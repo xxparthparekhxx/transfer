@@ -48,7 +48,7 @@ export default function Home() {
   };
 
   const handleDownload = async (filename: string) => {
-    window.location.href = `/api/download?filename=${filename}`;
+    window.location.href = `/api/download?filename=${filename}&code=${accessCode}`;
   };
 
   const handleDelete = async (filename: string) => {
