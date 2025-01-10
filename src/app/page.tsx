@@ -8,7 +8,19 @@ export default function Home() {
   const [isDragging, setIsDragging] = useState(false);
   const [fileToDelete, setFileToDelete] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
+  const [locked, setLocked] = useState(true);
+  const [accessCode, setAccessCode] = useState("");
+  const [isError, setIsError] = useState(false);
 
+  const handleAccess = () => {
+    if (accessCode === "V3DS3SA!") {
+      setLocked(false);
+      setIsError(false);
+    } else {
+      setIsError(true);
+      setTimeout(() => setIsError(false), 2000);
+    }
+  };
   useEffect(() => {
     fetchFiles();
   }, []);
@@ -149,6 +161,54 @@ export default function Home() {
           </div>
         </div>
       </div>
+
+      {locked && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
+          <div className="bg-white rounded-lg p-6 max-w-sm w-full">
+            <h3 className="text-lg font-semibold mb-4 text-black">Enter Access Code</h3>
+            <div className="flex flex-col items-center gap-4">
+              <div className="w-full">
+                <input
+                  type="password"
+                  placeholder="Enter your access code"
+                  className={`w-full px-4 py-2 border text-black rounded-lg outline-none transition-all ${
+                    isError
+                      ? "border-red-500 bg-red-50"
+                      : "border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  }`}
+                  value={accessCode}
+                  onChange={(e) => setAccessCode(e.target.value)}
+                />
+                {isError && (
+                  <p className="text-red-500 text-sm mt-2">
+                    Invalid access code. Please try again.
+                  </p>
+                )}
+              </div>
+              <button
+                onClick={handleAccess}
+                className="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors duration-200 flex items-center justify-center gap-2"
+              >
+                <span>Access Files</span>
+                <svg
+                  className="w-5 h-5"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M9 5l7 7-7 7"
+                  />
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {loading && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-lg p-6 max-w-sm w-full">
